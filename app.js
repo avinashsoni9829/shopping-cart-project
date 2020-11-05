@@ -3,6 +3,7 @@ const mongoose=require('mongoose');
 const path=require('path');
 const config=require('./config/database');
 
+
 //connection to database
 mongoose.connect(config.database,{
     useNewUrlParser:true,
@@ -23,11 +24,13 @@ app.set('views',path.join(__dirname,'views'));
 app.set('view engine','ejs');
 //setting the public folder
 app.use(express.static(path.join(__dirname,'public')));
-
-
-app.get('/',(req,res,next)=>{
-    res.send('working!');
+//setting the router
+app.get('/',(req,res,next) =>{
+    res.render('index',{
+        title:'Home'
+    })
 });
+
 
 
 
