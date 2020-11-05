@@ -2,7 +2,8 @@ const express=require('express');
 const mongoose=require('mongoose');
 const path=require('path');
 const config=require('./config/database');
-
+const pages=require('./routes/pages');
+const adminPages=require('./routes/admin_pages');
 
 //connection to database
 mongoose.connect(config.database,{
@@ -25,11 +26,10 @@ app.set('view engine','ejs');
 //setting the public folder
 app.use(express.static(path.join(__dirname,'public')));
 //setting the router
-app.get('/',(req,res,next) =>{
-    res.render('index',{
-        title:'Home'
-    })
-});
+
+app.use('/admin/pages',adminPages);
+
+app.use('/',pages);
 
 
 
