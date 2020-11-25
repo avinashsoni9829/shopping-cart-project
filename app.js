@@ -4,6 +4,10 @@ const path=require('path');
 const config=require('./config/database');
 const pages=require('./routes/pages');
 const adminPages=require('./routes/admin_pages');
+const bodyparser =require('body-parser');
+const session=require('express-session');
+const expressValidator=require('express-validator');
+
 
 //connection to database
 mongoose.connect(config.database,{
@@ -27,22 +31,49 @@ app.set('view engine','ejs');
 app.use(express.static(path.join(__dirname,'public')));
 //setting the router
 
+//body parser 
+app.use(bodyparser.urlencoded({
+    extended:false
+}));
+
+app.use(bodyparser.json());
+
+
+//sessions
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+  }));
+
+  // validator
+
+  app.use(expressValidator({
+      errorFormatter:function(param,msg,value)
+      {
+          var namespace=param.split('.'),
+          root=namespace.shift(),
+          formParam=root;
+
+          while(namespace.length)
+          {
+              formParam +='['+namespace.shift()+']';
+          }
+          return{
+              param: formParam,
+              msg: msg,
+              value: value
+          };
+      }
+  }));
+
+
+
 app.use('/admin/pages',adminPages);
 
 app.use('/',pages);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //starting the server
 
