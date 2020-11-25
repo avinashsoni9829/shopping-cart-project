@@ -39,7 +39,7 @@ app.use(bodyparser.urlencoded({
 app.use(bodyparser.json());
 
 
-//sessions
+//sessions middleware
 
 app.use(session({
     secret: 'keyboard cat',
@@ -48,7 +48,9 @@ app.use(session({
     cookie: { secure: true }
   }));
 
-  // validator
+  // validator middleware
+
+//error: expressValidator is not a function
 
   app.use(expressValidator({
       errorFormatter:function(param,msg,value)
@@ -68,6 +70,16 @@ app.use(session({
           };
       }
   }));
+
+  // mesaages middleware
+
+  app.use(require('connect-flash')());
+app.use(function (req, res, next) {
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+
 
 
 
