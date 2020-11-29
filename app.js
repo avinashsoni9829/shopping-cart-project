@@ -31,6 +31,10 @@ app.set('view engine','ejs');
 app.use(express.static(path.join(__dirname,'public')));
 //setting the router
 
+// set global error variable
+
+app.locals.errors=null;
+
 //body parser 
 app.use(bodyparser.urlencoded({
     extended:false
