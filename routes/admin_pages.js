@@ -1,6 +1,8 @@
 const express=require('express');
 const router=express.Router();
 // get pages index 
+const Page=require('../models/page');
+
 
 router.get('/',(req,res,next) =>{
     res.send('admin pages!');
@@ -45,7 +47,40 @@ router.post('/add-page',(req,res,next) =>{
         });
     }
     else{
-         console.log("success!");
+         
+        Page.findOne({slug:slug},function(err,page){
+         if(page)
+         {
+             req.flash('danger','page slug exist choose another ');
+             res.render('../views/admin/add_page',{
+                errors:errors,
+                title: title,
+                slug:slug,
+                content:content
+            });
+
+         }
+         else{
+             var page=new Page({
+                 title:title,
+                 slug:slug,
+                 content:content,
+                 sorting:0
+             });
+
+             page.save(function(err){
+                 if(err)
+                 {
+                     return console.log(err);
+                 }
+                 req.flash('success','page added!');
+                 res.redirect('/admin/pages');
+
+
+             });
+         }
+
+        });
 
     }
 
