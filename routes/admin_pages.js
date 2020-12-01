@@ -5,7 +5,11 @@ const Page=require('../models/page');
 
 
 router.get('/',(req,res,next) =>{
-    res.send('admin pages!');
+   Page.find(({})).sort({sorting:1}).exec(function(err,pages){
+       res.render('../views/admin/pages',{
+           pages:pages
+       });
+   });
 });
 
 // get add page
@@ -65,7 +69,7 @@ router.post('/add-page',(req,res,next) =>{
                  title:title,
                  slug:slug,
                  content:content,
-                 sorting:0
+                 sorting:100
              });
 
              page.save(function(err){
